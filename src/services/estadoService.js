@@ -23,6 +23,17 @@ const editEstadoEquipo = (estadoEquipoId,data) =>{
 }) 
 }
 
-export{
-    getEstadoEquipo,crearEstadoEquipo,editEstadoEquipo
-}
+const eliminarEquipo = (estadoEquipoId) => {
+    return axiosInstance.delete(`api/estadoEquipo/${estadoEquipoId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  
+  export {
+    getEstadoEquipo,
+    crearEstadoEquipo,
+    editEstadoEquipo,
+    eliminarEquipo
+  }

@@ -23,4 +23,11 @@ const editUsuario = (usuarioId, data) => {
   });
 };
 
-export { getUsuario, editUsuario, crearUsuario };
+const eliminarUsuario = (usuarioId) => {
+  return axiosInstance.delete(`api/users/${usuarioId}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+export { getUsuario, editUsuario, crearUsuario,eliminarUsuario};

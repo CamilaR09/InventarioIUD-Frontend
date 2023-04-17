@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {} from "bootstrap";
 import styled from "styled-components";
 import moment from "moment";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import {
   Table,
   Button,
@@ -12,51 +12,78 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-import{getMarca,crearMarca,editMarca} from '../../services/marcaService'
+import {
+  getMarca,
+  crearMarca,
+  editMarca,
+  eliminarMarca,
+} from "../../services/marcaService";
 
 export const MarcaView = () => {
-
   const [marcas, setMarca] = useState([]);
   const [valoresFrom, setValoresForm] = useState([]);
- // const { nombre = "", estado = "" } = valoresFrom;
- /*---------------------------------------------------------------------------------------------- */
- const [modalInsertar, setModalInsertar] = useState(false);
- const [modalEditar, setModalEditar] = useState(false);
- const [marcaActual, setMarcaActual] = useState({});
- /*---------------------------------------------------------------------------------------------- */
- const handleOnChange = (e) => {
-  setValoresForm({ ...valoresFrom, [e.target.name]: e.target.value });
-};
-/*----------------------------------------------------------------------------------------------*/
-const handleCrearMarca = async (e) => {
-  e.preventDefault();
-  console.log(valoresFrom);
-  try {
-    const resp = await crearMarca(valoresFrom);
-    setValoresForm({ nombre: "", estado: "" });
-    setModalInsertar(false); 
-    ListarMarcas(); 
-    Swal.close();
-  } catch (error) {
-    console.log(error);
-    Swal.close();
-  }
-};
-/*---------------------------------------------------------------------------------------------- */
-const handleEditarMarca = async (e) => {
-  e.preventDefault();
-  try {
-    const resp = await editMarca(marcaActual._id, marcaActual);
-    setMarcaActual({});
-    setModalEditar(false);
-    ListarMarcas();
-    Swal.close();
-  } catch (error) {
-    console.log(error);
-    Swal.close();
-  }
-};
-/*----------------------------------------------------------------------------------------------*/
+  // const { nombre = "", estado = "" } = valoresFrom;
+  /*---------------------------------------------------------------------------------------------- */
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
+  const [marcaActual, setMarcaActual] = useState({});
+  /*---------------------------------------------------------------------------------------------- */
+  const handleOnChange = (e) => {
+    setValoresForm({ ...valoresFrom, [e.target.name]: e.target.value });
+  };
+  /*----------------------------------------------------------------------------------------------*/
+  const handleCrearMarca = async (e) => {
+    e.preventDefault();
+    console.log(valoresFrom);
+    try {
+      const resp = await crearMarca(valoresFrom);
+      setValoresForm({ nombre: "", estado: "" });
+      setModalInsertar(false);
+      ListarMarcas();
+      Swal.close();
+    } catch (error) {
+      console.log(error);
+      Swal.close();
+    }
+  };
+  /*---------------------------------------------------------------------------------------------- */
+  const handleEditarMarca = async (e) => {
+    e.preventDefault();
+    try {
+      const resp = await editMarca(marcaActual._id, marcaActual);
+      setMarcaActual({});
+      setModalEditar(false);
+      ListarMarcas();
+      Swal.close();
+    } catch (error) {
+      console.log(error);
+      Swal.close();
+    }
+  };
+  /*----------------------------------------------------------------------------------------------*/
+
+  const handleEliminarMarca = async (id) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const resp = await eliminarMarca(id);
+          ListarMarcas();
+          Swal.fire("Eliminado!", "La marca ha sido eliminada.", "success");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  };
+  /*----------------------------------------------------------------------------------------------*/
   const ListarMarcas = async () => {
     try {
       const resp = await getMarca();
@@ -69,13 +96,13 @@ const handleEditarMarca = async (e) => {
   };
   useEffect(() => {
     ListarMarcas();
-  },[]);
-/*---------------------------------------------------------------------------------------------- */
-const seleccionarMarca = (marca) => {
-  setMarcaActual(marca);
-  setModalEditar(true);
-};
-/*----------------------------------------------------------------------------------------------*/
+  }, []);
+  /*---------------------------------------------------------------------------------------------- */
+  const seleccionarMarca = (marca) => {
+    setMarcaActual(marca);
+    setModalEditar(true);
+  };
+  /*----------------------------------------------------------------------------------------------*/
   return (
     <>
       <Content>
@@ -83,8 +110,9 @@ const seleccionarMarca = (marca) => {
           <h3>Marcas</h3>
         </Emcabezado>
         <Emcabezado>
-         
-          <Button color="success" onClick={() => setModalInsertar(true)}>Nueva Marca</Button>
+          <Button color="success" onClick={() => setModalInsertar(true)}>
+            Nueva Marca
+          </Button>
         </Emcabezado>
         <br></br>
         <Table>
@@ -107,9 +135,7 @@ const seleccionarMarca = (marca) => {
                     <td>{marca.nombre}</td>
                     <td>{marca.estado}</td>
                     <td>
-                      {moment(marca.fechaCreacion).format(
-                        "DD-MM-YYYY / HH:mm"
-                      )}
+                      {moment(marca.fechaCreacion).format("DD-MM-YYYY / HH:mm")}
                     </td>
                     <td>
                       {moment(marca.fechaActualizacion).format(
@@ -117,11 +143,21 @@ const seleccionarMarca = (marca) => {
                       )}
                     </td>
                     <td>
-                      <Button color="primary" onClick={() => seleccionarMarca(marca)}>Editar</Button>
+                      <Button
+                        color="primary"
+                        onClick={() => seleccionarMarca(marca)}
+                      >
+                        Editar
+                      </Button>
                     </td>
                     {"  "}
                     <td>
-                      <Button color="danger">Eliminar</Button>
+                      <Button
+                        color="danger"
+                        onClick={() => handleEliminarMarca(marca._id)}
+                      >
+                        Eliminar
+                      </Button>
                     </td>
                   </tr>
                 );
@@ -228,9 +264,9 @@ const seleccionarMarca = (marca) => {
           </Button>
         </ModalFooter>
       </Modal>
-      </>
-  )
-}
+    </>
+  );
+};
 
 const Content = styled.div`
   width: 100%;
@@ -255,5 +291,3 @@ const Emcabezado = styled.div`
     color: #1766dc;
   }
 `;
-
-

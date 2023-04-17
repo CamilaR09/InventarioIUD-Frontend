@@ -12,7 +12,7 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-import { getEstadoEquipo,crearEstadoEquipo,editEstadoEquipo} from "../../services/estadoService";
+import { getEstadoEquipo,crearEstadoEquipo,editEstadoEquipo,eliminarEquipo} from "../../services/estadoService";
 
 export const EstadoView = () => {
 
@@ -55,6 +55,28 @@ const handleEditarEstado = async (e) => {
     console.log(error);
     Swal.close();
   }
+};
+/*----------------------------------------------------------------------------------------------*/
+const handleEliminarEstado = async (estadoId) => {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar!",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const resp = await eliminarEquipo(estadoId);
+    ListarEstado();
+    Swal.fire("Eliminado!", "El estado ha sido eliminada.", "success");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
 };
 /*----------------------------------------------------------------------------------------------*/
   const ListarEstado = async () => {
@@ -121,7 +143,7 @@ const seleccionarEstado = (estado) => {
                     </td>
                     {"  "}
                     <td>
-                      <Button color="danger">Eliminar</Button>
+                      <Button color="danger" onClick={() => handleEliminarEstado(estado._id)}>Eliminar</Button>
                     </td>
                   </tr>
                 );

@@ -23,6 +23,12 @@ const editMarca = (marcaId,data) =>{
 }) 
 }
 
-export{
-    getMarca,crearMarca,editMarca
-}
+const eliminarMarca = (marcaId) => {
+    return axiosInstance.delete(`api/marca/${marcaId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  };
+  
+  export { getMarca, crearMarca, editMarca, eliminarMarca };

@@ -350,7 +350,4 @@ const BotonX = styled.button`
   &:hover{
     background: #f2f2f2;
   }
-
-
-
 `;

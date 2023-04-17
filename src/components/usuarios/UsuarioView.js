@@ -15,6 +15,7 @@ import {
   getUsuario,
   crearUsuario,
   editUsuario,
+  eliminarUsuario
 } from "../../services/usuarioService";
 
 export const UsuarioView = () => {
@@ -57,6 +58,28 @@ export const UsuarioView = () => {
       console.log(error);
       Swal.close();
     }
+  };
+  /*---------------------------------------------------------------------------------------------- */
+  const handleEliminarUsuario = async (usuarioId) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const resp = await eliminarUsuario(usuarioId);
+        ListarUsuarios();
+          Swal.fire("Eliminado!", "La marca ha sido eliminada.", "success");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
   };
   /*----------------------------------------------------------------------------------------------*/
   const ListarUsuarios = async () => {
@@ -131,7 +154,8 @@ export const UsuarioView = () => {
                     </td>
                     {"  "}
                     <td>
-                      <Button color="danger">Eliminar</Button>
+                      <Button color="danger"
+                      onClick={() => handleEliminarUsuario(usuario._id)}>Eliminar</Button>
                     </td>
                   </tr>
                 );
@@ -232,16 +256,6 @@ export const UsuarioView = () => {
               required
               name="email"
               value={usuarioActual.email}
-              onChange={(e) =>
-                setUsuarioActual({ ...usuarioActual, email: e.target.value })
-              }
-            />
-            <input
-              className="form-control"
-              type="text"
-              required
-              name="email"
-              value={usuarioActual._id}
               onChange={(e) =>
                 setUsuarioActual({ ...usuarioActual, email: e.target.value })
               }

@@ -23,6 +23,14 @@ const editTipoEquipo = (tipoEquipoId,data) =>{
 }) 
 }
 
+const eliminarTipo = (tipoEquipoId) => {
+    return axiosInstance.delete(`api/tipoEquipo/${tipoEquipoId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
 export{
-    getTipoEquipo,crearTipoEquipo,editTipoEquipo
+    getTipoEquipo,crearTipoEquipo,editTipoEquipo,eliminarTipo
 }

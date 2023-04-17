@@ -12,7 +12,7 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-import {getTipoEquipo,crearTipoEquipo,editTipoEquipo } from "../../services/tipoService";
+import {getTipoEquipo,crearTipoEquipo,editTipoEquipo,eliminarTipo } from "../../services/tipoService";
 
 export const TipoView = () => {
 
@@ -55,6 +55,28 @@ const handleEditarTipo = async (e) => {
     console.log(error);
     Swal.close();
   }
+};
+/*----------------------------------------------------------------------------------------------*/
+const handleEliminarTipo = async (TipoId) => {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar!",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const resp = await eliminarTipo(TipoId);
+    ListarTipos();
+    Swal.fire("Eliminado!", "El estado ha sido eliminada.", "success");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
 };
 /*----------------------------------------------------------------------------------------------*/
   const ListarTipos = async () => {
@@ -121,7 +143,7 @@ const seleccionarTipo = (tipo) => {
                     </td>
                     {"  "}
                     <td>
-                      <Button color="danger">Eliminar</Button>
+                      <Button color="danger"onClick={() => handleEliminarTipo(tipo._id)}>Eliminar</Button>
                     </td>
                   </tr>
                 );
